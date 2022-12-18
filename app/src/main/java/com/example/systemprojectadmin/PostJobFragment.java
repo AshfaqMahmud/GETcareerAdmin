@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,6 +52,7 @@ public class PostJobFragment extends Fragment {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         job_title = view.findViewById(R.id.job_title);
@@ -115,7 +117,7 @@ public class PostJobFragment extends Fragment {
             public void onClick(View v) {
                 String job_name = job_title.getText().toString();
                 String job_typ = job_type.getText().toString();
-                //String cat = spinner.getSelectedItem().toString();
+                String uid = user.getUid();
 
 
                 if (job_name != null && job_typ != null)
@@ -129,6 +131,13 @@ public class PostJobFragment extends Fragment {
                             reference.child("JobVacancy").child("Category").child(item).child(pos).child("Location").setValue(job_typ);
                             reference.child("JobVacancy").child("Category").child(item).child(pos).child("Post").setValue(job_name);
                             reference.child("JobVacancy").child("Category").child(item).child(pos).child("Last Date").setValue(date2);
+
+                            reference.child("CompanyJob").child(uid).child(pos).child("Company").setValue(companyName);
+                            reference.child("CompanyJob").child(uid).child(pos).child("Location").setValue(job_typ);
+                            reference.child("CompanyJob").child(uid).child(pos).child("Category").setValue(item);
+                            reference.child("CompanyJob").child(uid).child(pos).child("Post").setValue(job_name);
+                            reference.child("CompanyJob").child(uid).child(pos).child("Last Date").setValue(date2);
+
 
                             Toast.makeText(getActivity(),"Job Posted",Toast.LENGTH_SHORT).show();
 

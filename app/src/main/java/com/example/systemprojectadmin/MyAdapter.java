@@ -33,6 +33,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         holder.jname.setText(job.getJobTitle());
         holder.jtyp.setText(job.getJobSite());
         holder.jcompany.setText(job.getJobCompany());
+        holder.jdate.setText(job.getJobDate());
     }
 
     @Override
@@ -40,12 +41,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return list.size();
     }
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView jname, jtyp, jcompany;
+        TextView jname, jtyp, jcompany, jdate;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             jname = itemView.findViewById(R.id.job_title);
             jtyp = itemView.findViewById(R.id.job_typ);
             jcompany = itemView.findViewById(R.id.job_company);
+            jdate = itemView.findViewById(R.id.date);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

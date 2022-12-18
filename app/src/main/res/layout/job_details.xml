@@ -7,22 +7,23 @@
     android:layout_marginBottom="5dp"
     android:layout_marginStart="15dp"
     android:layout_marginEnd="15dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="#10162B"
     app:cardCornerRadius="8dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/job_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/lexend_deca"
             android:hint="Company Name Placeholder"
+            android:textColor="#448AFF"
             android:textColorHint="#B1B1B1"
-            android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -31,39 +32,33 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/lexend_deca"
             android:hint="CompanyType"
+            android:textColor="#448AFF"
             android:textColorHint="#B1B1B1"
-            android:textColor="@color/black"
             android:textSize="13sp"
             android:textStyle="italic" />
+
         <TextView
             android:id="@+id/job_company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/lexend_deca"
             android:hint="Company Name"
+            android:textColor="#448AFF"
             android:textColorHint="#B1B1B1"
-            android:textColor="#373737"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="normal" />
+
         <TextView
-            android:id="@+id/key"
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/lexend_deca"
-            android:text="Key"
-            android:textColor="#373737"
-            android:textSize="5sp"
-            android:textStyle="normal"
-            android:visibility="invisible"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/lexend_deca"
             android:layout_gravity="end"
-            android:text="Tap to see more..."
-            android:textColor="#373737"
-            android:textSize="12sp"
+            android:fontFamily="@font/lexend_deca"
+            android:hint="Date"
+            android:textColor="#448AFF"
+            android:textSize="13sp"
             android:textStyle="normal" />
+
 
 
     </LinearLayout>

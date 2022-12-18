@@ -1,13 +1,21 @@
 package com.example.systemprojectadmin;
 
 public class Job {
-    private String JobTitle, JobCompany, JobSite, JobKey;
+    private String JobTitle, JobCompany, JobSite, JobKey, JobDate;
 
-    public Job(String jobTitle, String jobCompany, String jobSite, String jobKey) {
+    public Job(String jobTitle, String jobCompany, String jobSite, String jobDate) {
         JobTitle = jobTitle;
         JobCompany = jobCompany;
         JobSite = jobSite;
-        JobKey = jobKey;
+        JobDate = jobDate;
+    }
+
+    public String getJobDate() {
+        return JobDate;
+    }
+
+    public void setJobDate(String jobDate) {
+        JobDate = jobDate;
     }
 
     public String getJobTitle() {
@@ -34,11 +42,4 @@ public class Job {
         JobSite = jobSite;
     }
 
-    public String getJobKey() {
-        return JobKey;
-    }
-
-    public void setJobKey(String jobKey) {
-        JobKey = jobKey;
-    }
 }
