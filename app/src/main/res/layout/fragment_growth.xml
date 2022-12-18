@@ -1,15 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
     tools:context=".GrowthFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Growth fragment" />
+        android:layout_height="wrap_content"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbarStyle="insideOverlay">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Keep your growth updated !"
+            android:textColor="@color/white"
+            android:background="#151515"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/lexend_deca"
+            android:padding="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/companyvalue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/heading"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/lexend_deca"
+                android:text="Comapny value (in Million)"
+                android:textColor="#B39DDB"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph"
+                android:layout_width="wrap_content"
+                android:padding="20dp"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="#1D1A1A" />
+
+            <Button
+                android:id="@+id/editbutton"
+                app:icon ="@drawable/ic_baseline_edit_24"
+                android:backgroundTint="#00B0FF"
+                android:padding="12dp"
+                android:text="Edit"
+                android:textSize="16sp"
+                android:fontFamily="@font/lexend_deca"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/hiddenlayout"
+            android:background="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-80dp"
+            android:layout_below="@+id/companyvalue"
+            android:visibility="invisible"
+            android:orientation="vertical"
+            android:padding="15dp">
+            <EditText
+                android:id="@+id/eyear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/background_custom"
+                android:fontFamily="@font/lexend_deca"
+                android:hint="Enter Year"
+                android:includeFontPadding="true"
+                android:inputType="number"
+                android:minHeight="50dp"
+                android:paddingStart="10dp"
+                android:textColor="#0091EA"
+                android:textColorHint="#7ACAEBFF"
+                android:textSize="16sp" />
+            <EditText
+                android:id="@+id/evalue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/background_custom"
+                android:fontFamily="@font/lexend_deca"
+                android:hint="Enter Value (in million)"
+                android:includeFontPadding="true"
+                android:inputType="numberDecimal"
+                android:minHeight="50dp"
+                android:paddingStart="10dp"
+                android:textColor="#0091EA"
+                android:textColorHint="#7ACAEBFF"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/postb"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#2979FF"
+                    android:fontFamily="@font/lexend_deca"
+                    android:padding="10dp"
+                    android:text="Enter"
+                    android:textColor="#FFFCFC"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                <Button
+                    android:id="@+id/closeb"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#FF3D00"
+                    android:fontFamily="@font/lexend_deca"
+                    android:padding="10dp"
+                    android:text="Close"
+                    android:textColor="#FFFCFC"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>
