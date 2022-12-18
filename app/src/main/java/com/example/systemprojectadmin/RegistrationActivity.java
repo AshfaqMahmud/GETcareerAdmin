@@ -40,6 +40,15 @@ import android.os.Bundle;
 
 public class RegistrationActivity extends AppCompatActivity {
     String type="";
+    String name = "";
+    String id = "";
+    String cat = "";
+    String email = "";
+    String pass = "";
+    String cpass = "";
+    String location = "";
+    String size = "";
+    String about = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,22 +64,23 @@ public class RegistrationActivity extends AppCompatActivity {
         DatabaseReference reference = database.getReference();
         Button register = findViewById(R.id.rgstrb);
         Spinner spinner = (Spinner) findViewById(R.id.companytyp);
-        EditText tname, tmail, tpass, tid, tloc, tsize, tabout;
+        Spinner spinner2 = (Spinner) findViewById(R.id.companysize);
+        EditText tname, tmail, tpass, tid, tloc,tcpass, tabout;
 
         tname = findViewById(R.id.tname);
         tid = findViewById(R.id.tid);
         tmail = findViewById(R.id.tmail);
         tloc = findViewById(R.id.tloc);
-        tsize = findViewById(R.id.tsize);
         tabout = findViewById(R.id.tabout);
         tpass = findViewById(R.id.tpass);
+        tcpass = findViewById(R.id.tcpass);
 
         //arraylist for spinner
         List<String> status = new ArrayList<>();
-        status.add(0,"Choose Category");
-        status.add("IT");
+        status.add(0,"Choose Industry");
+        status.add("Engineering & IT");
         status.add("Business & Management");
-        status.add("Engineering");
+        status.add("Manufacturing");
         status.add("Biology & Medical Science");
         status.add("Others");
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, status);
@@ -78,7 +88,37 @@ public class RegistrationActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (parent.getItemAtPosition(position).equals("Choose current status")) {
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#80A29595"));
+                if (parent.getItemAtPosition(position).equals("Choose Industry")) {
+                } else {
+                    String item = parent.getItemAtPosition(position).toString();
+                    Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+
+        });
+
+        List<String> status2 = new ArrayList<>();
+        status2.add(0,"Company Size :");
+        status2.add("less than 50");
+        status2.add("50 to 100");
+        status2.add("100 to 500");
+        status2.add("500 to 1000");
+        status2.add("1000 to less than 10000");
+        status2.add("more than 10000");
+        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter(this, android.R.layout.simple_list_item_1, status2);
+        spinner2.setAdapter(arrayAdapter2);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#80A29595"));
+                if (parent.getItemAtPosition(position).equals("Company Size :")) {
                 } else {
                     String item = parent.getItemAtPosition(position).toString();
                     Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_SHORT).show();
@@ -96,48 +136,75 @@ public class RegistrationActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(RegistrationActivity.this, "Register Button CLicked",Toast.LENGTH_SHORT).show();
-                String name = tname.getText().toString();
-                String id = tid.getText().toString();
-                String cat = spinner.getSelectedItem().toString();
-                String email = tmail.getText().toString();
-                String pass = tpass.getText().toString();
-                String location = tloc.getText().toString();
-                String size = tsize.getText().toString();
-                String about = tabout.getText().toString();
+                //Toast.makeText(RegistrationActivity.this, "Register Button CLicked",Toast.LENGTH_SHORT).show();
+                name = tname.getText().toString();
+                id = tid.getText().toString();
+                cat = spinner.getSelectedItem().toString();
+                email = tmail.getText().toString();
+                pass = tpass.getText().toString();
+                cpass = tcpass.getText().toString();
+                location = tloc.getText().toString();
+                size = spinner2.getSelectedItem().toString();
+                about = tabout.getText().toString();
 
-                if(email!=null && pass!=null)
+                if(email!="" && pass!="")
                 {
-                    mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                String uid = user.getUid();
-                                reference.child("CompanyDB").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        reference.child("CompanyDB").child(uid).child("name").setValue(name);
-                                        reference.child("CompanyDB").child(uid).child("id").setValue(id);
-                                        reference.child("CompanyDB").child(uid).child("category").setValue(cat);
-                                        reference.child("CompanyDB").child(uid).child("email").setValue(email);
-                                        reference.child("CompanyDB").child(uid).child("Location").setValue(location);
-                                        reference.child("CompanyDB").child(uid).child("Size").setValue(size);
-                                        reference.child("CompanyDB").child(uid).child("about").setValue(about);
-                                    }
+                    if(pass.length()<8)
+                    {
+                        tpass.setError("Password must be size of 8!");
+                    }
+                    else
+                    {
+                        if(pass.equals(cpass))
+                        {
+                            mAuth.createUserWithEmailAndPassword(email,pass).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()){
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        String uid = user.getUid();
+                                        reference.child("CompanyDB").addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                reference.child("CompanyDB").child(uid).child("name").setValue(name);
+                                                reference.child("CompanyDB").child(uid).child("id").setValue(id);
+                                                reference.child("CompanyDB").child(uid).child("phone").setValue("0101010101");
+                                                reference.child("CompanyDB").child(uid).child("category").setValue(cat);
+                                                reference.child("CompanyDB").child(uid).child("email").setValue(email);
+                                                reference.child("CompanyDB").child(uid).child("Location").setValue(location);
+                                                reference.child("CompanyDB").child(uid).child("Size").setValue(size);
+                                                reference.child("CompanyDB").child(uid).child("Type").setValue(type);
+                                                reference.child("CompanyDB").child(uid).child("about").setValue(about);
+                                                reference.child("CompanyDB").child(uid).child("web").setValue("http://www.bing.com");
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                                Toast.makeText(RegistrationActivity.this, "Registration success.",Toast.LENGTH_SHORT).show();
+                                                //start login activity to login
+                                                Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
 
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                     }
-                                });
-                            }
-                            else{
-                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(RegistrationActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
-                            }
+                                    else{
+                                        Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(RegistrationActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
-                    });
+                        else
+                        {
+                            tpass.setError("Password not matching");
+                            tcpass.setError("Password not matching");
+                        }
+                    }
+
                 }
             }
         });
