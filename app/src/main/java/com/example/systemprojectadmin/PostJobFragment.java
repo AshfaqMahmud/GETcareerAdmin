@@ -40,7 +40,7 @@ import java.util.Objects;
 public class PostJobFragment extends Fragment {
     EditText job_title, last_date, job_type;
     String date2 = "";
-    String item ="";
+    String item = "";
     Button post, close;
 
     @Override
@@ -48,7 +48,6 @@ public class PostJobFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_post_job, container, false);
-
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference();
@@ -61,7 +60,7 @@ public class PostJobFragment extends Fragment {
         close = view.findViewById(R.id.closeb);
 
         List<String> status2 = new ArrayList<>();
-        status2.add(0,"Choose Category");
+        status2.add(0, "Choose Category");
         status2.add("IT");
         status2.add("Business & Management");
         status2.add("Engineering");
@@ -73,10 +72,10 @@ public class PostJobFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ((TextView) parent.getChildAt(0)).setTextColor(Color.parseColor("#7ACAEBFF"));
-                if (parent.getItemAtPosition(position).equals("Choose Category")){
-                }else {
+                if (parent.getItemAtPosition(position).equals("Choose Category")) {
+                } else {
                     item = parent.getItemAtPosition(position).toString();
-                    Toast.makeText(parent.getContext(),"Selected: " +item, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -108,49 +107,75 @@ public class PostJobFragment extends Fragment {
                 dialog.show();
             }
         });
-        SharedPreferences pref = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
-        String companyName = pref.getString("CompanyName","");
-        Toast.makeText(getActivity(),"Name "+companyName,Toast.LENGTH_SHORT).show();
+        String uid = user.getUid();
 
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String job_name = job_title.getText().toString();
                 String job_typ = job_type.getText().toString();
-                String uid = user.getUid();
 
-
-                if (job_name != null && job_typ != null)
-                {
-                    reference.child("JobVacancy").addListenerForSingleValueEvent(new ValueEventListener() {
+                if (job_name != null && job_typ != null) {
+                    reference.child("CompanyDB").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            long total = snapshot.child("Category").child(item).getChildrenCount();
-                            String pos = Objects.toString(total,"");
-                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Company").setValue(companyName);
-                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Location").setValue(job_typ);
-                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Post").setValue(job_name);
-                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Last Date").setValue(date2);
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                String uid2 = dataSnapshot.getKey();
+                                if (uid2.equals(uid)) {
+                                    String temp = snapshot.child(uid).child("name").getValue(String.class);
+                                    reference.child("JobVacancy").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            long total = snapshot.child("Category").child(item).getChildrenCount();
+                                            String pos = String.valueOf(total + 1);
+                                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Company").setValue(temp);
+                                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Location").setValue(job_typ);
+                                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Post").setValue(job_name);
+                                            reference.child("JobVacancy").child("Category").child(item).child(pos).child("Last Date").setValue(date2);
+                                        }
 
-                            reference.child("CompanyJob").child(uid).child(pos).child("Company").setValue(companyName);
-                            reference.child("CompanyJob").child(uid).child(pos).child("Location").setValue(job_typ);
-                            reference.child("CompanyJob").child(uid).child(pos).child("Category").setValue(item);
-                            reference.child("CompanyJob").child(uid).child(pos).child("Post").setValue(job_name);
-                            reference.child("CompanyJob").child(uid).child(pos).child("Last Date").setValue(date2);
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
+                                        }
+                                    });
+                                    reference.child("CompanyJob").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            long total = snapshot.child(uid).getChildrenCount();
+                                            String pos1 = String.valueOf(total + 1);
+                                            reference.child("CompanyJob").child(uid).child(pos1).child("Company").setValue(temp);
+                                            reference.child("CompanyJob").child(uid).child(pos1).child("Location").setValue(job_typ);
+                                            reference.child("CompanyJob").child(uid).child(pos1).child("Category").setValue(item);
+                                            reference.child("CompanyJob").child(uid).child(pos1).child("Post").setValue(job_name);
+                                            reference.child("CompanyJob").child(uid).child(pos1).child("Last Date").setValue(date2);
+                                        }
 
-                            Toast.makeText(getActivity(),"Job Posted",Toast.LENGTH_SHORT).show();
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
 
+                                        }
+                                    });
+                                    Toast.makeText(getActivity(), "Name " + temp, Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+                            }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(getActivity(),error.getMessage(),Toast.LENGTH_SHORT).show();
+
                         }
                     });
+                    Toast.makeText(getActivity(), "Job Posted", Toast.LENGTH_SHORT).show();
+                    job_title.setText("");
+                    job_type.setText("");
+                    last_date.setText("");
                 }
+
             }
         });
+
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +183,7 @@ public class PostJobFragment extends Fragment {
                 JobFragment job = new JobFragment();
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.container, job ,"null");
+                transaction.replace(R.id.container, job, "null");
                 transaction.addToBackStack(null);
                 transaction.commit();
             }

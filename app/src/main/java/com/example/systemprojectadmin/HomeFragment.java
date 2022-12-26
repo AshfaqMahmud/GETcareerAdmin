@@ -1,6 +1,8 @@
 package com.example.systemprojectadmin;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -11,10 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +30,10 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class HomeFragment extends Fragment {
-
+    ProgressDialog dialog;
+    ImageView logout, edit, cancel;
+    EditText editweb;
+    Button save;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +46,9 @@ public class HomeFragment extends Fragment {
         TextView tname, tmail, tphone, toverview, tweb, ttype, tsize, thq, ttype2;
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        Button edit;
+        dialog = new ProgressDialog(getActivity());
+        dialog.setTitle("Loading Home Screen\nThis may take some time");
+        dialog.show();
 
         //get id of textviews
         tname = view.findViewById(R.id.company_name);
@@ -50,7 +60,11 @@ public class HomeFragment extends Fragment {
         tsize = view.findViewById(R.id.size);
         thq = view.findViewById(R.id.headquarter);
         ttype2 = view.findViewById(R.id.type2);
-        edit = view.findViewById(R.id.edit);
+        edit = view.findViewById(R.id.editbutton);
+        cancel = view.findViewById(R.id.cancelbtn);
+        logout = view.findViewById(R.id.logout);
+        editweb= view.findViewById(R.id.eweb);
+        save= view.findViewById(R.id.save);
 
         reference.child("CompanyDB").addValueEventListener(new ValueEventListener() {
             @Override
@@ -67,12 +81,6 @@ public class HomeFragment extends Fragment {
                 String utype2 = snapshot.child(uid).child("Type").getValue(String.class);
                 String size = snapshot.child(uid).child("Size").getValue(String.class);
                 String hq = snapshot.child(uid).child("Location").getValue(String.class);
-                //Picasso.with(getActivity()).load(image).into(userimage);
-
-                SharedPreferences preferences = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
-                SharedPreferences.Editor myEdit = preferences.edit();
-                myEdit.putString("CompanyName",name);
-                myEdit.apply();
 
                 tname.setText(name);
                 tmail.setText(mail);
@@ -85,11 +93,64 @@ public class HomeFragment extends Fragment {
                 thq.setText(hq);
                 ttype2.setText(utype2);
 
+                dialog.dismiss();
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(view, "Logout clicked", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                mAuth.signOut();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editweb.setVisibility(View.VISIBLE);
+                cancel.setVisibility(View.VISIBLE);
+                tweb.setVisibility(View.GONE);
+                save.setVisibility(View.VISIBLE);
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editweb.setVisibility(View.GONE);
+                        cancel.setVisibility(View.GONE);
+                        tweb.setVisibility(View.VISIBLE);
+                        save.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String web = editweb.getText().toString();
+                if(web.equals(""))
+                {
+                    Snackbar.make(getActivity().findViewById(android.R.id.content),
+                            "Web address is null!!", Snackbar.LENGTH_LONG).show();
+                }
+                else
+                {
+                    reference.child("CompanyDB").child(user.getUid()).child("web").setValue(web);
+                    editweb.setVisibility(View.GONE);
+                    cancel.setVisibility(View.GONE);
+                    tweb.setVisibility(View.VISIBLE);
+                    save.setVisibility(View.GONE);
+                    Snackbar.make(getActivity().findViewById(android.R.id.content),
+                            "Edited successfully", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 

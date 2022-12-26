@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
@@ -52,13 +54,17 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(LoginActivity.this,"Successfully logged in",Toast.LENGTH_SHORT).show();
-                                SharedPreferences sharedPreferences = getSharedPreferences("login",0);
+                                SharedPreferences sharedPreferences = getSharedPreferences("pref",MODE_PRIVATE);
                                 SharedPreferences.Editor myEdit = sharedPreferences.edit();
                                 myEdit.putBoolean("status",true);
                                 myEdit.commit();
                                 Intent intent = new Intent(LoginActivity.this, MainPage.class);
                                 startActivity(intent);
                                 finish();
+                            }
+                            else{
+                                email.setError("Check Email");
+                                pass.setError("Check Password");
                             }
                         }
                     });

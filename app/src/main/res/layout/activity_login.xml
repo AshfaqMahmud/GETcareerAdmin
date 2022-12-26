@@ -17,7 +17,7 @@
             android:layout_marginBottom="40dp"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            app:srcCompat="@drawable/loginimg" />
+            app:srcCompat="@drawable/logo" />
         <TextView
             android:id="@+id/title"
             android:layout_below="@+id/image"
@@ -81,7 +81,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginRight="10dp"
-            android:backgroundTint="#474747"
+            android:backgroundTint="#603232"
             android:fontFamily="@font/lexend_deca"
             android:padding="10dp"
             android:text="Login"
@@ -93,7 +93,7 @@
             android:id="@+id/bbottom"
             android:layout_width="250dp"
             android:layout_height="60dp"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="#183A49"
             android:layout_below="@+id/rgstrb"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="30dp"
@@ -107,7 +107,23 @@
             android:textColorLink="#C51162"
             android:textSize="16sp"
             android:textStyle="bold" />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/forgottxt"
+            android:text="Reset my password"
+            android:layout_below="@+id/bbottom"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:fontFamily="@font/lexend_deca"
+            android:padding="15dp"
+            android:textSize="15sp"
+            android:background="@drawable/search_custom"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            />
 
 
     </RelativeLayout>
