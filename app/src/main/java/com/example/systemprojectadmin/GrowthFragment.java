@@ -39,16 +39,19 @@ public class GrowthFragment extends Fragment {
     int year, value;
 
     GraphView graphView;
-    BarGraphSeries series;
+    LineGraphSeries series;
     FirebaseDatabase node = FirebaseDatabase.getInstance();
-    DatabaseReference reference = node.getReference("testpoint");
-    /*@Override
-    /*public void onStart() {
-        super.onStart();
+    DatabaseReference reference = node.getReference("CompanyDB");
 
-        reference.addValueEventListener(new ValueEventListener() {
+    @Override
+    public void onStart() {
+        super.onStart();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        String cid = user.getUid();
+        reference.child(cid).child("Economy").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 DataPointInterface[] dp = new DataPoint[(int) snapshot.getChildrenCount()];
                 int index = 0;
                 for(DataSnapshot snapshot1: snapshot.getChildren())
@@ -65,7 +68,7 @@ public class GrowthFragment extends Fragment {
 
             }
         });
-    }*/
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,7 +76,7 @@ public class GrowthFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_growth, container, false);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
+
         TextView tname, tmail, ttype, tabout, tloc, tsize;
         EditText tyear, tvalue;
 
@@ -84,9 +87,10 @@ public class GrowthFragment extends Fragment {
         edit = view.findViewById(R.id.editbutton);
         enter = view.findViewById(R.id.postb);
         close = view.findViewById(R.id.closeb);
-        series = new BarGraphSeries();
+        series = new LineGraphSeries();
         graphView = view.findViewById(R.id.graph);
         graphView.addSeries(series);
+        user = FirebaseAuth.getInstance().getCurrentUser();
         String cid = user.getUid();
 
 
@@ -119,7 +123,8 @@ public class GrowthFragment extends Fragment {
                 float y = Float.parseFloat(value);
                 PointValue pointValue = new PointValue(x, y);
                 assert id != null;
-                reference.child(id).setValue(pointValue);
+                reference.child(cid).child("Economy").child(id).setValue(pointValue);
+                //reference
             }
         });
         close.setOnClickListener(new View.OnClickListener() {
